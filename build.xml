@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="NetAccountClient" default="dist">
+	<description>
+		ANT build script for making the NetLogin Client
+	</description>
+	<property name="src" location="src"/>
+	<property name="resources" location="resources"/>
+	<property name="lib" location="lib"/>
+	<property name="swt" location="swt"/>
+	<property name="build" location="build"/>
+	
+	<target name="compile" description="Compile the source files">
+		<mkdir dir="${build}"/>
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath>
+				<fileset dir="${lib}">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="dist" depends="compile" description="Bundle the compiled files into a jar">
+		<jar jarfile="NetLogin.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+                <attribute name="Rsrc-Main-Class" value="nz.ac.auckland.netlogin.NetLogin"/>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Rsrc-Class-Path" value="./ commons-beanutils-1.8.3.jar commons-logging-1.1.1.jar des-2.1.jar jna-3.3.0-platform.jar jna-3.3.0.jar jopt-simple-4.2.jar org.eclipse.swt.win32.win32.x86_64-4.2.1.jar org.eclipse.swt.win32.win32.x86-4.2.1.jar"/>
+            </manifest>
+			<fileset dir="${build}"/>
+			<fileset dir="resources" excludes="*.psd"/>
+            <zipfileset src="${lib}/jar-in-jar-loader.zip"/>
+			<zipfileset dir="${lib}" includes="*.jar"/>
+        </jar>
+	</target>
+	
+	<target name="clean" description="Clean up the produced files from compilation">
+		<delete dir="${build}"/>
+		<delete file="NetLogin.jar"/>
+	</target>
+</project>
